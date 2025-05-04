@@ -1,3 +1,4 @@
+import pandas as pd
 def preprocess(df):
     df = df.copy()
     df = df.drop(columns=['Unnamed: 0'], errors='ignore')
