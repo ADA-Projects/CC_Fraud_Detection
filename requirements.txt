@@ -4,3 +4,4 @@ fastapi==0.115.12
 kagglehub==0.3.12
 imbalanced-learn==0.10.1
 xgboost>=1.7.6
+shap==0.43.0
