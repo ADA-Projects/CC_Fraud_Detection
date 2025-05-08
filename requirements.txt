@@ -1,6 +1,5 @@
 annotated-types==0.7.0
 click==8.1.8
-colabcode==0.1.1
 fastapi==0.115.12
 kagglehub==0.3.12
 imbalanced-learn==0.10.1
