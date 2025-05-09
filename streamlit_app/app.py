@@ -51,10 +51,25 @@ df = pd.DataFrame([{
     "amt_x_hour_sin": amt_x_hour_sin
 }])
 
-# 4. Prediction & display
+# 4. Ensure all model-expected features are present
+#    Get the feature names the model was trained on:
+expected_feats = model.get_booster().feature_names
+
+#    For any missing feature, fill with a default:
+for feat in expected_feats:
+    if feat not in df.columns:
+        # numeric → 0, engineered defaults are already numeric
+        df[feat] = 0
+
+#    Reorder columns so they exactly match the model’s expectation
+df = df[expected_feats]
+
+# 5. Predict
 prob      = model.predict_proba(df)[0,1]
 threshold = 0.70
 label     = "🚨 Fraud" if prob >= threshold else "✅ Legitimate"
 
 st.metric("Fraud Probability", f"{prob:.2%}")
 st.write(f"**Classification (threshold = {threshold}):** {label}")
+
+
