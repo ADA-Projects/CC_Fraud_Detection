@@ -6,8 +6,12 @@ import numpy as np
 import joblib
 
 # 1. Load artifacts
-model     = joblib.load("streamlit_app/final_model.joblib")
-cat_rates = joblib.load("streamlit_app/category_rates.joblib")
+BASE_DIR   = os.path.dirname(__file__)
+model      = joblib.load(os.path.join(BASE_DIR, "final_model.joblib"))
+cat_rates  = joblib.load(os.path.join(BASE_DIR, "category_rates.joblib"))
+
+# model     = joblib.load("streamlit_app/final_model.joblib")
+# cat_rates = joblib.load("streamlit_app/category_rates.joblib")
 
 st.title("💳 Fraud Detection Demo")
 st.write("Enter transaction details to see fraud probability and classification.")
@@ -20,7 +24,8 @@ city_pop = st.number_input("City Population", min_value=0, value=100_000, step=1
 
 # 3. Feature engineering
 amt_log       = np.log1p(amt)
-category_te   = cat_rates.get(category, np.mean(list(cat_rates.values())))
+default_rate = cat_rates.mean()
+category_te  = cat_rates.get(category, default_rate)
 hour_sin      = np.sin(2 * np.pi * hour / 24)
 hour_cos      = np.cos(2 * np.pi * hour / 24)
 is_night      = int(hour >= 22 or hour < 6)
