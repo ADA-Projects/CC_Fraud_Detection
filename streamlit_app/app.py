@@ -6,12 +6,12 @@ import numpy as np
 import joblib
 
 # 1. Load artifacts
-BASE_DIR   = os.path.dirname(__file__)
-model      = joblib.load(os.path.join(BASE_DIR, "final_model.joblib"))
-cat_rates  = joblib.load(os.path.join(BASE_DIR, "category_rates.joblib"))
+# BASE_DIR   = os.path.dirname(__file__)
+# model      = joblib.load(os.path.join(BASE_DIR, "final_model.joblib"))
+# cat_rates  = joblib.load(os.path.join(BASE_DIR, "category_rates.joblib"))
 
-# model     = joblib.load("streamlit_app/final_model.joblib")
-# cat_rates = joblib.load("streamlit_app/category_rates.joblib")
+model     = joblib.load("streamlit_app/final_model.joblib")
+cat_rates = joblib.load("streamlit_app/category_rates.joblib")
 
 st.title("💳 Fraud Detection Demo")
 st.write("Enter transaction details to see fraud probability and classification.")
