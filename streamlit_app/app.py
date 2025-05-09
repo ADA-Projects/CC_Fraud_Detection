@@ -14,6 +14,8 @@ uf_names_path  = os.path.join(BASE_DIR, "uf_names.joblib")
 model     = joblib.load(model_path)
 cat_rates = joblib.load(cat_rates_path)
 uf_names  = joblib.load(uf_names_path)
+st.write("uf_names keys:", uf_names.keys())
+
 
 st.title("💳 Fraud Detection Demo")
 st.write("Enter transaction details to see fraud probability and classification.")
