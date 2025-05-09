@@ -6,8 +6,8 @@ import numpy as np
 import joblib
 
 # 1. Load artifacts
-model     = joblib.load("final_model.joblib")
-cat_rates = joblib.load("category_rates.joblib")
+model     = joblib.load("streamlit_app/final_model.joblib")
+cat_rates = joblib.load("streamlit_app/category_rates.joblib")
 
 st.title("💳 Fraud Detection Demo")
 st.write("Enter transaction details to see fraud probability and classification.")
