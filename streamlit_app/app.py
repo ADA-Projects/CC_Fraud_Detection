@@ -95,7 +95,7 @@ df = pd.DataFrame([{  # assemble features into DataFrame
 }])
 
 # 4. Ensure all model-expected features are present
-expected_feats = model.get_booster().feature_names
+expected_feats = booster.feature_names
 for feat in expected_feats:
     if feat not in df.columns:
         df[feat] = 0
