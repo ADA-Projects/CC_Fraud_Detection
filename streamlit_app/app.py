@@ -14,6 +14,11 @@ features = joblib.load(os.path.join(BASE_DIR, "slim_features.joblib"))
 cat_rates = joblib.load(os.path.join(BASE_DIR, "category_rates.joblib"))
 uf_names = joblib.load(os.path.join(BASE_DIR, "uf_names.joblib"))
 
+# Build mapping: integer code → friendly label
+raw_labels   = list(le_category.classes_)
+codes        = list(le_category.transform(raw_labels))
+friendly_map = {code: uf_names.get(raw, raw) for code, raw in zip(codes, raw_labels)}
+
 st.title("💳 Fraud Detection Demo (Slim Model)")
 st.write("This demo uses a simplified model based on 9 engineered features.\n"
          "**Note:** Hour is encoded with sine/cosine to capture its circular nature.")
@@ -22,20 +27,31 @@ st.write("This demo uses a simplified model based on 9 engineered features.\n"
 st.info("**Hour Encoding:** We transform the hour into two features: `hour_sin = sin(2π·hour/24)` and `hour_cos = cos(2π·hour/24)`."
         " This captures the fact that hours wrap around (midnight is close to 23:00).")
 
+
+
 # 2. User inputs
 amt = st.number_input("Transaction Amount", min_value=0.0, value=100.0, step=1.0)
-category = st.selectbox(
+# category = st.selectbox(
+#     "Category",
+#     options=list(cat_rates.index),
+#     format_func=lambda c: uf_names.get(c, c)
+# )
+
+# dropdown of integer codes, but show friendly_map[code]
+category_code = st.selectbox(
     "Category",
-    options=list(cat_rates.index),
-    format_func=lambda c: uf_names.get(c, c)
+    options=codes,
+    format_func=lambda c: friendly_map[c]
 )
+st.write(f"Selected category: **{friendly_map[category_code]}**")
 hour = st.slider("Hour (0–23)", 0, 23, 12)
 city_pop = st.number_input("City Population", min_value=0, value=100_000, step=1_000)
 
 # 3. Feature engineering
 amt_log = np.log1p(amt)
 default_rate = cat_rates.mean()
-category_te = cat_rates.get(category, default_rate)
+#category_te = cat_rates.get(category, default_rate)
+category_te = cat_rates.get(raw_labels[category_code], cat_rates.mean())
 hour_sin = np.sin(2 * np.pi * hour / 24)
 hour_cos = np.cos(2 * np.pi * hour / 24)
 is_night = int(hour >= 22 or hour < 6)
