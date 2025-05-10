@@ -86,7 +86,7 @@ df = pd.DataFrame([data])[features]
 # 4. Predict using slim model
 dmat = xgb.DMatrix(df)
 prob = booster.predict(dmat)[0]
-threshold = st.slider("Decision threshold", 0.0, 1.0, best_thr, step=0.01)
+threshold = st.slider("Decision threshold", 0.0, 1.0, 0.447, step=0.01)
 label = "🚨 Fraud" if prob >= threshold else "✅ Legitimate"
 
 # 5. Display results

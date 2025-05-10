@@ -29,6 +29,10 @@ def preprocess(df, cat_rates):
 
     # New: amt_pop_ratio & is_business_hour (if you added them)
     df["amt_pop_ratio"]   = df["amt"] / df["city_pop"]
+
+    # B) Log‐scale it so extremes don’t blow past training splits:
+    df["amt_pop_ratio_log"] =np.log1p(df["amt_pop_ratio"])
+
     df["is_business_hour"]= df["hour"].between(8,20).astype(int)
 
     # 1) Log10 + raw‐k
