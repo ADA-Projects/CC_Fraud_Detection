@@ -6,8 +6,7 @@ import pandas as pd
 import numpy as np
 import xgboost as xgb
 
-st.write("LOADED FEATURES:", features)
-st.write("DATA KEYS:", list(data.keys()))
+
 
 
 # 1. Load artifacts
@@ -87,7 +86,7 @@ df = pd.DataFrame([data])[features]
 # 4. Predict using slim model
 dmat = xgb.DMatrix(df)
 prob = booster.predict(dmat)[0]
-threshold = 0.70
+threshold = st.slider("Decision threshold", 0.0, 1.0, best_thr, step=0.01)
 label = "🚨 Fraud" if prob >= threshold else "✅ Legitimate"
 
 # 5. Display results
