@@ -13,6 +13,7 @@ booster.load_model(os.path.join(BASE_DIR, "fraud_slim.json"))
 features = joblib.load(os.path.join(BASE_DIR, "slim_features.joblib"))
 cat_rates = joblib.load(os.path.join(BASE_DIR, "category_rates.joblib"))
 uf_names = joblib.load(os.path.join(BASE_DIR, "uf_names.joblib"))
+le_category = joblib.load(os.path.join(BASE_DIR, "le_category.joblib"))
 
 # Build mapping: integer code → friendly label
 raw_labels   = list(le_category.classes_)
