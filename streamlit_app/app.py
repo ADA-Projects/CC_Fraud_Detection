@@ -47,7 +47,7 @@ city_pop  = st.number_input("City Population", min_value=1, value=100_000, step=
 amt_log10      = np.log10(max(amt, 1))
 amt_raw_k      = amt / 1_000
 # Derived flags
-amt_pop_ratio   = amt / city_pop
+amt_pop_ratio_log   = np.log1p(amt / city_pop)
 is_business_hour = int(8 <= hour <= 20)
 # Category target encoding
 cat_te = cat_rates.get(raw_labels[category_code], cat_rates.mean())
@@ -78,7 +78,7 @@ data = {
     "pop_size_code": pop_size_code,
     "amt_x_catTE": amt_x_catTE,
     "amt_x_hour_sin": amt_x_hour_sin,
-    "amt_pop_ratio": amt_pop_ratio,
+    "amt_pop_ratio_log": amt_pop_ratio_log,
     "is_business_hour": is_business_hour
 }
 df = pd.DataFrame([data])[features]
