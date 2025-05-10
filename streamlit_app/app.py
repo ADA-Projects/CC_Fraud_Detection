@@ -68,7 +68,7 @@ city_pop = st.number_input(
 # 3. Feature engineering
 amt_log       = np.log1p(amt)
 default_rate  = cat_rates.mean()
-category_te   = cat_rates.get(category, default_rate)
+
 hour_sin      = np.sin(2 * np.pi * hour / 24)
 hour_cos      = np.cos(2 * np.pi * hour / 24)
 is_night      = int(hour >= 22 or hour < 6)
