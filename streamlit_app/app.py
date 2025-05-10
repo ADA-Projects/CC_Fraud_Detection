@@ -109,6 +109,9 @@ dmat = xgb.DMatrix(df)               # convert to DMatrix
 prob = booster.predict(dmat)[0]      # predict returns a 1-d array of probabilities
 
 threshold = 0.70
+#Debug
+st.write(f"DEBUG → prob = {prob:.4f}, threshold = {threshold}")
+
 label     = "🚨 Fraud" if prob >= threshold else "✅ Legitimate"
 
 st.metric("Fraud Probability", f"{prob:.2%}")
