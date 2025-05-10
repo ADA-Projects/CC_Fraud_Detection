@@ -4,17 +4,32 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+import xgboost as xgb
 
 # 1. Load artifacts
-BASE_DIR = os.path.dirname(__file__)
-model_path     = os.path.join(BASE_DIR, "final_model.joblib")
-cat_rates_path = os.path.join(BASE_DIR, "category_rates.joblib")
-uf_names_path  = os.path.join(BASE_DIR, "uf_names.joblib")
+BASE_DIR     = os.path.dirname(__file__)
+#model_path   = os.path.join(BASE_DIR, "final_model.joblib")
+rates_path   = os.path.join(BASE_DIR, "category_rates.joblib")
+names_path   = os.path.join(BASE_DIR, "uf_names.joblib")
+le_path      = os.path.join(BASE_DIR, "le_category.joblib")
 
-model     = joblib.load(model_path)
-cat_rates = joblib.load(cat_rates_path)
-uf_names  = joblib.load(uf_names_path)
-st.write("uf_names keys:", uf_names.keys())
+#model        = joblib.load(model_path)
+cat_rates    = joblib.load(rates_path)
+uf_names     = joblib.load(names_path)
+le_category  = joblib.load(le_path)
+
+# 1. Load the Booster
+booster = xgb.Booster()
+booster.load_model(os.path.join(BASE_DIR, "fraud_booster.json"))
+
+
+
+
+
+# Build mapping: integer code → friendly label
+raw_labels   = list(le_category.classes_)
+codes        = list(le_category.transform(raw_labels))
+friendly_map = {code: uf_names.get(raw, raw) for code, raw in zip(codes, raw_labels)}
 
 
 st.title("💳 Fraud Detection Demo")
@@ -24,14 +39,26 @@ st.write("Enter transaction details to see fraud probability and classification.
 amt = st.number_input(
     "Transaction Amount", min_value=0.0, value=100.0, step=1.0
 )
-# Show friendly labels in dropdown, but keep code as underlying value
-category = st.selectbox(
+
+# dropdown of integer codes, but show friendly_map[code]
+category_code = st.selectbox(
     "Category",
-    options=list(cat_rates.index),
-    format_func=lambda c: uf_names.get(c, c)
+    options=codes,
+    format_func=lambda c: friendly_map[c]
 )
-# Show interpreted friendly name
-st.write(f"Selected category: **{uf_names.get(category, category)}**")
+st.write(f"Selected category: **{friendly_map[category_code]}**")
+
+# now derive your target-encoded feature
+category_te = cat_rates.get(raw_labels[category_code], cat_rates.mean())
+
+# # Show friendly labels in dropdown, but keep code as underlying value
+# category = st.selectbox(
+#     "Category",
+#     options=list(cat_rates.index),
+#     format_func=lambda c: uf_names.get(c, c)
+# )
+# # Show interpreted friendly name
+# st.write(f"Selected category: **{uf_names.get(category, category)}**")
 
 hour     = st.slider("Hour (0–23)", 0, 23, 12)
 city_pop = st.number_input(
@@ -76,7 +103,11 @@ for feat in expected_feats:
 df = df[expected_feats]
 
 # 5. Predict
-prob      = model.predict_proba(df)[0, 1]
+#prob      = model.predict_proba(df)[0, 1]
+# 2. When you have your DataFrame `df` (with correct features & ordering):
+dmat = xgb.DMatrix(df)               # convert to DMatrix
+prob = booster.predict(dmat)[0]      # predict returns a 1-d array of probabilities
+
 threshold = 0.70
 label     = "🚨 Fraud" if prob >= threshold else "✅ Legitimate"
 
