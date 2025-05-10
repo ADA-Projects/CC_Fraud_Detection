@@ -20,7 +20,7 @@ le_category  = joblib.load(le_path)
 
 # 1. Load the Booster
 booster = xgb.Booster()
-booster.load_model(os.path.join(BASE_DIR, "fraud_booster.json"))
+booster.load_model(os.path.join(BASE_DIR, "fraud_slim_booster.json"))
 
 
 
