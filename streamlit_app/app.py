@@ -6,6 +6,10 @@ import pandas as pd
 import numpy as np
 import xgboost as xgb
 
+st.write("LOADED FEATURES:", features)
+st.write("DATA KEYS:", list(data.keys()))
+
+
 # 1. Load artifacts
 BASE_DIR = os.path.dirname(__file__)
 # Load slim booster and expected features
@@ -47,7 +51,6 @@ amt_raw_k      = amt / 1_000
 amt_pop_ratio   = amt / city_pop
 is_business_hour = int(8 <= hour <= 20)
 # Category target encoding
-#cat_te         = cat_rates.get(category, cat_rates.mean())
 cat_te = cat_rates.get(raw_labels[category_code], cat_rates.mean())
 # Hour encodings
 hour_sin       = np.sin(2 * np.pi * hour / 24)
