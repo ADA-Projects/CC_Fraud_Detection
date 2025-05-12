@@ -2,6 +2,7 @@
 import numpy as np
 import xgboost as xgb
 from sklearn.base import BaseEstimator, ClassifierMixin
+import pandas as pd
 
 class BoosterWrapper(BaseEstimator, ClassifierMixin):
     def __init__(self, booster, feature_names):
