@@ -6,14 +6,19 @@ import pandas as pd
 import numpy as np
 import xgboost as xgb
 
-# 1. Load artifacts
-BASE_DIR = os.path.dirname(__file__)
+# Load artifacts
+BASE_DIR     = os.path.dirname(__file__)
+ARTIFACT_DIR = os.path.abspath(os.path.join(BASE_DIR, "../artifacts"))
+
+# Load slim booster
 booster = xgb.Booster()
-booster.load_model(os.path.join(BASE_DIR, "fraud_slim.json"))
-features    = joblib.load(os.path.join(BASE_DIR, "slim_features.joblib"))
-cat_rates   = joblib.load(os.path.join(BASE_DIR, "category_rates.joblib"))
-uf_names    = joblib.load(os.path.join(BASE_DIR, "uf_names.joblib"))
-le_category = joblib.load(os.path.join(BASE_DIR, "le_category.joblib"))
+booster.load_model(os.path.join(ARTIFACT_DIR, "fraud_slim.json"))
+
+# Load expected features & mappings
+features    = joblib.load(os.path.join(ARTIFACT_DIR, "slim_features.joblib"))
+cat_rates   = joblib.load(os.path.join(ARTIFACT_DIR, "category_rates.joblib"))
+uf_names    = joblib.load(os.path.join(ARTIFACT_DIR, "uf_names.joblib"))
+le_category = joblib.load(os.path.join(ARTIFACT_DIR, "le_category.joblib"))
 
 # build code→friendly map
 raw_labels = list(le_category.classes_)
