@@ -1,4 +1,3 @@
-# CC_Fraud_Detection
 # Credit Card Fraud Detection
 
 ![Streamlit Demo](streamlit_app/screenshot.png)
